@@ -90,6 +90,19 @@ app.put("/blogs/:id", function(req, res){
 	});
 });
 
+// DELETE ROUTE
+app.delete("/blogs/:id", function(req, res){
+	//destroy blogs
+	Blog.findByIdAndRemove(req.params.id, function(err){
+		if(err) {
+			res.redirect("/blogs");
+		} else {
+			//redirect somewhere
+			res.redirect("/blogs");
+		}
+	});
+});
+
 // LISTEN PORT
 app.listen(process.env.PORT || 3000, process.env.IP, function(){
 	console.log("App is running in 'https://myblog-wkntr.run-ap-south1.goorm.io'");
