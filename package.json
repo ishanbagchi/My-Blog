@@ -1,0 +1,25 @@
+{
+  "name": "myblog",
+  "version": "1.0.0",
+  "description": "My personal blog",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://0ishan0:ishaniman22@github.com/0ishan0/My-Blog.git"
+  },
+  "author": "Ishan Bagchi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/0ishan0/My-Blog/issues"
+  },
+  "homepage": "https://github.com/0ishan0/My-Blog#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.13"
+  }
+}
