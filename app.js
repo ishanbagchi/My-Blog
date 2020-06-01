@@ -1,9 +1,32 @@
 const express          = require("express");
+const dotenv           = require("dotenv").config();
 const bodyParser       = require("body-parser");
 const mongoose         = require("mongoose");
 const methodOverride   = require("method-override");
 const expressSanitizer = require("express-sanitizer");
 const app              = express();
+const multer           = require("multer");
+
+var storage = multer.diskStorage({
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
+var imageFilter = function (req, file, cb) {
+    // accept image files only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+var upload = multer({ storage: storage, fileFilter: imageFilter})
+
+const cloudinary = require("cloudinary");
+cloudinary.config({ 
+  cloud_name: 'ishanbagchi', 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // APP CONFIG
 // var url = process.env.DATABASEURL || "mongodb://localhost:27017/blogapp";
@@ -56,18 +79,33 @@ app.get("/blogs/new", function(req, res){
 	res.render("new");
 })
 
+// req.file.path
 // CREATE ROUTE
-app.post("/blogs", function(req, res){
-	//create blog
-	req.body.blog.body = req.sanitize(req.body.blog.body);
-	Blog.create(req.body.blog, function(err, newBlog){
-		if(err) {
-			console.log(err);
-		} else {
-			//redirect to the index
-			res.redirect("/blogs");
-		}
+app.post("/blogs", upload.single('image'), function(req, res){
+	cloudinary.uploader.upload(req.file.path, function(result) {
+  		// add cloudinary url for the image to the campground object under image property
+  		req.body.blog.image = result.secure_url;
+		req.body.blog.body = req.sanitize(req.body.blog.body);
+  		Blog.create(req.body.blog, function(err, newBlog) {
+    		if (err) {
+      			console.log(err);
+    		} else {
+				res.redirect("/blogs");
+			}
+  		});
 	});
+	
+	
+	// //create blog
+	// req.body.blog.body = req.sanitize(req.body.blog.body);
+	// Blog.create(req.body.blog, function(err, newBlog){
+	// 	if(err) {
+	// 		console.log(err);
+	// 	} else {
+	// 		//redirect to the index
+	// 		res.redirect("/blogs");
+	// 	}
+	// });
 });
 
 // SHOW ROUTE 

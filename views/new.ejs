@@ -4,14 +4,15 @@
 	<div class="ui huge header">
 		NEW BLOG
 	</div>
-	<form class="ui form" action="/blogs" method="post">
+	<form class="ui form" action="/blogs" method="post" enctype="multipart/form-data">
 		<div class="field">
 			<label>Title</label>
 			<input type="text" name="blog[title]" placeholder="Title" required>
 		</div>
 		<div class="field">
 			<label>Image URL</label>
-			<input type="text" name="blog[image]" placeholder="Image" required>
+			<!-- <input type="text" name="blog[image]" placeholder="Image" required> -->
+			<input type="file" id="image" name="image" accept="image/*" required>
 		</div>
 		<div class="field">
 			<label>Blog Content</label>
